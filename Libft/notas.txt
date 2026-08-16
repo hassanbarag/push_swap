@@ -1,0 +1,94 @@
+Per a revisar:
+
+size > SIZE_MAX / nmemb)
+
+# Aclarar concepto de casteo y limitaciones:
+	Nunca castees funciones para “hacerlas encajar”
+	Si necesitas castear una función para pasarla como callback,
+	el diseño está mal.
+	Un cast de funciones NO convierte una función en otra
+	solo le dice al compilador:
+
+	“shhh, confía en mí 😌”
+
+	y el compilador obedece… aunque el programa quede mal.
+
+# Aclarar concepto de byte to byte (unsigned char *):
+	ft_lstiter.c:49:2: error: statement requires expression of scalar type ('void' invalid)
+
+# Aclarar concepto de struc y como funciona!
+
+# File Descriptor: 
+	Un file descriptor es simplemente un número entero que el sistema operativo usa para identificar dónde escribir o leer datos.
+	Es un identificador de algo abierto (archivo, terminal, pipe, etc.)
+	Resumen rápido para que se te quede 🔒
+
+# Fuera de rango:
+	🔥 SEGUNDO PROBLEMA SERIO
+	❌ ESTA LÍNEA NO TIENE SENTIDO:
+	if (len > 4294967295)
+	return (NULL);
+
+¿Por qué?
+
+len es size_t
+
+size_t ya está limitado por la arquitectura
+
+En 42:
+
+64 bits → máx ≈ 18446744073709551615
+
+Nunca vas a recibir un valor “fuera de rango”
+
+Un file descriptor es simplemente un número entero que el sistema operativo usa para identificar dónde escribir o leer datos.
+
+👉 No es un archivo en sí
+👉 Es un identificador de algo abierto (archivo, terminal, pipe, etc.)
+
+fd = número que identifica un flujo abierto
+
+putchar → siempre fd = 1
+
+ft_putchar_fd → tú decides el fd
+
+write(fd, ...) es la base de todo
+
+Si quieres, después te explico:
+
+cómo funciona open() y por qué devuelve un fd
+
+cómo printf usa fd por debajo
+
+o cómo se rompe todo si escribes en un fd cerrado 😈
+
+1 ft_isalpha: 	Se trata de definir si un char es letra (return 1) o no (return 0);
+2 ft_isdigit: 	Se trata de definir si un char es numero (return 1) o no (return 0);
+3 ft_isalnum: 	Se trata de definir si un char es numero o letra (return 1) o no;
+4 ft_isascii: 	Se trata de definir si un numero esta dentro de tabla ascii (return 1) o no (return 0). 
+	      	No contempla ASCII extendido (128 a 255);
+5 ft_isprint: 	Se trata de definir si el input es printeable (return 1) o no (return 0);
+6 ft_strlen:  	Esta funcion mide a longitud de una cadena;
+7 ft_memset:  	Rellena memoria byte a byte con un valor concreto. Unsigned (sin signo) char (1 byte). Trabajar con bytes crudos. Garantiza de 0-255. No puedes acceder byte a byte con int * o float *.
+	      	Si se hiciera int *ptr = (int *)s; se avanzaria de 4 en 4 y memset va de 1 en 1. La i del bucle cuenta bytes y n numero de bytes y ptr[i] accede byte a byte.
+8 ft_bzero:   	Esta funcion trabaja como memset, pero en lugar de susbtituir por un caracter concreto, 	inicializa a 0. Se puede inicializar a 0 o '\0', pero no a NULL.
+9 ft_memcpy:  	Esta funcion trabaja como memset, pero copia los caracteres de la cadena src a la cadena dst. Trabaja byte to byte para ello debemos pasarlo a unsigned char;
+0 ft_memmove:	Esta funcion copia bytes de la direccion de memoria de src a la direccion de memoria de la cadena dest. Se tiene que controlar cual de las dos es mayor (donde empieza src + 2, por ejemplo y
+		dst +0, en este caso src seria mas grande). Si src es mayor o igual que dst no hay riesgo de solapar. En caso contrario si lo hay por lo que hay que empezar a copiar desde el ultimo elemento;
+		Tambien trabaja byte to byte, por lo que hay que pasarla a unsigned char...;
+1 ft_strlcpy:	Esta funcion copia un numero n de caracteres a una cadena de destino. El null '\0' debe ser incluido. Primero se comrpueba que size no sea 0. Si es 0 retorna la longitud de la cadena src...
+		Esta funcion incluye la funcion strlen... (debe copiar max size - 1) para reservar un hueco de memoria para el null al final;
+2 ft_strlcat:	Esta funcion concatena una cadena de destino con una cadena source... el resultado tiene que ser la longitud total que hubiera resultado de concatenar las dos cadenas. Si la longitud de 
+		destino es = o menor que size, devuelve directamente la longitud total de la cadena que se hubiera creado.
+3 ft_toupper:	Esta funcion transforma un caracter en mayuscula restandole - 32 al char.
+4 ft_tolower:	Esta funcion transforma un caracter en minuscula restandole + 32 al char.
+5 ft_strchr:	Buscar un caracter en una string y devuelve el putero a la primera ocurrencia. Si no encuentra el caracter devuelve NULL. Se tiene que castear (char)...
+5 ft_strrchr:	Es lo mismo que la anterior pero devuelve la ultima ocurrencia del valor buscado. Si el valor buscado de null ('\0'), debe retornar el puntero al terminador.
+6 ft_strncmp:	Es una funcion que compara caracter a caracter (usa UNSIGNED CHAR) y retorna diferencia restando el caracter de la s1 y la s2 o retorna finalmente 0 si no hay diferenicia.
+7 ft_memchr:	Esta funcion devuelve puntero a caracter encontrado dentro de los primeros n bytes leidos. Si n <= 0, retorna null. Si no se encuentra, retorna null (o 0, qie es lo mismo). 
+		Trabaja byte a byte porque se centra en la memoria.
+8 ft_memcmp:	La funcion hace lo mismo que la anterior, pero en lugar de devolver el puntero devuelve la diferencia de los caracteres comparados. Sino, devuelve 0; Si n == 0 entonces 0;
+9 ft_strnstr:	La funcion intenta encontrar una cadena llamada "Pequenia" en una cadena llamada "Greande". Si la encuentra, devuelve el puntero de la cadena en la posicion en la que se 
+		encuentra el primer caracter de la coincidencia (donde empieza pequenia dentro de grande). Si el tamanio de pequenia es 0 o no es encontrada dentro de grande, se retorna 0;
+0 ft_atoi:	Esta funcion transforma un string a un numero int. Ignora espacios consecutivos + elementos especiales del 9 al 13 e ignora un solo simbolo + o -.
+1 ft_calloc:	Calloc hace que se se reserve memoria para un string o array y ademas setea los elementos a 0;
