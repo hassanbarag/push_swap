@@ -232,10 +232,6 @@ To evaluate performance on larger datasets, you can generate random numbers usin
 - [Linked List Data Structure](https://www.geeksforgeeks.org/stack-data-structure/)  
 - [Youtube Tutorial Explanation Video](https://youtu.be/OaG81sDEpVk?si=VlINwmGRlkJxbO7m)  
 
-**AI Usage:**
-
-- Documentation structuring and formatting
-- Clarification of algorithmic complexity
 - Technical explanation refinement
 
 All algorithm design, implementation, architecture, and validation were written and tested manually by the authors
